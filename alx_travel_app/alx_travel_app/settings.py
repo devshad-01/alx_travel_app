@@ -21,20 +21,23 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-# Read .env file
-environ.Env.read_env(BASE_DIR.parent / '.env')
+# Try to read .env file, but don't fail if it doesn't exist
+try:
+    environ.Env.read_env(BASE_DIR.parent / '.env')
+except:
+    pass
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-wu&jwz29i)rsnbhe#hcsefehk16-=5rr2&3iwto-1nnpqicd%%')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+DEBUG = env('DEBUG', default=True)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
 
 
 # Application definition
@@ -52,7 +55,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     # Local apps
-    'alx_travel_app.listings',
+    'alx_travel_app.listings.apps.ListingsConfig',
 ]
 
 MIDDLEWARE = [
@@ -92,11 +95,11 @@ WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
+        'NAME': env('DB_NAME', default='alx_travel'),
+        'USER': env('DB_USER', default='root'),
+        'PASSWORD': env('DB_PASSWORD', default='Qwerty.25'),
+        'HOST': env('DB_HOST', default='localhost'),
+        'PORT': env('DB_PORT', default='3306'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         },
