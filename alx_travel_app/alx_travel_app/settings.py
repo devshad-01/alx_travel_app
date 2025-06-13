@@ -21,11 +21,20 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-# Try to read .env file, but don't fail if it doesn't exist
-try:
-    environ.Env.read_env(BASE_DIR.parent / '.env')
-except:
-    pass
+# Read .env file
+env_file = BASE_DIR.parent / '.env'
+if env_file.exists():
+    environ.Env.read_env(env_file)
+    print(f"Loading .env from: {env_file}")
+else:
+    print(f"Warning: .env file not found at {env_file}")
+    # Try alternative location
+    alt_env_file = BASE_DIR / '.env'
+    if alt_env_file.exists():
+        environ.Env.read_env(alt_env_file)
+        print(f"Loading .env from alternative location: {alt_env_file}")
+    else:
+        print(f"Warning: .env file not found at {alt_env_file} either")
 
 
 # Quick-start development settings - unsuitable for production
@@ -55,7 +64,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     # Local apps
-    'alx_travel_app.listings.apps.ListingsConfig',
+    'alx_travel_app.listings',
 ]
 
 MIDDLEWARE = [
@@ -97,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': env('DB_NAME', default='alx_travel'),
         'USER': env('DB_USER', default='root'),
-        'PASSWORD': env('DB_PASSWORD', default='Qwerty.25'),
+        'PASSWORD': env('DB_PASSWORD', default=''),
         'HOST': env('DB_HOST', default='localhost'),
         'PORT': env('DB_PORT', default='3306'),
         'OPTIONS': {
